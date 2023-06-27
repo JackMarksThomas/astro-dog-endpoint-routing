@@ -1,0 +1,25 @@
+---
+import DefaultPage from '../../layouts/default-page.astro'
+
+export async function getStaticPaths() {
+  const response = await fetch(`https://dog.ceo/api/breeds/list/all`)
+  const { message } = await response.json()
+  const breeds = Object.keys(message)
+
+  const routes = breeds.map(async breed => {
+    const endpoint = `https://dog.ceo/api/breed/${breed}/images/random`
+    const response = await fetch(endpoint)
+    const { message: image } = await response.json()
+
+    return { params: { dog: breed }, props: { title: breed, text: breed, image } }
+  })
+
+  return Promise.all(routes)
+}
+
+const { dog } = Astro.params;
+const { title, text, image } = Astro.props;
+---
+<DefaultPage title={title}>
+  <img src={image} alt={title} />
+</DefaultPage>

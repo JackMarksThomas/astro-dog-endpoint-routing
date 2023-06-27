@@ -1,15 +1,19 @@
 ---
+import DefaultPage from '../layouts/default-page.astro';
+
+const response = await fetch(`https://dog.ceo/api/breeds/list/all`)
+const { message } = await response.json()
+const breeds = Object.keys(message)
+
+const title = 'Dogs!'
+const description = 'A list of all the dog breeds.'
+
+const { url, text, image } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<DefaultPage title={title}>
+  <p>{description}</p>
+	<ul>
+		{breeds.map(breed => <li><a href={`/dogs/${breed}`}>{breed}</a></li>)}
+	</ul>
+</DefaultPage>
